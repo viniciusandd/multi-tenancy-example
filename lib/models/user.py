@@ -25,15 +25,16 @@ class User(BaseModel):
 
     def get_my_priced_orders(self):
         query = self._get_user_priced_orders()
-        return query.filter(User.id == self.id).all()
+        orders = query.filter(User.id == self.id).all()
+        return orders
 
     def get_my_priced_orders_jsonified(self):
         return [
             {
-                "user name": result[0],
-                "item name": result[1],
-                "item price": result[2],
-                "item quantity": result[3],
-                "total fee": result[4]
+                "user_name": result[0],
+                "item_description": result[1],
+                "item_price": result[2],
+                "order_quantity": result[3],
+                "order_total": result[4]
             } for result in self.get_my_priced_orders()
-            ]
+        ]
