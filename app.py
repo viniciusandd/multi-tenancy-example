@@ -10,6 +10,7 @@ app = Flask(__name__)
 setup_schema_selection(app)
 serealizer_init_app(app)
 
+
 @app.route('/orders', methods=["POST"])
 def user_orders():
 	user_id = request.json.get("user_id")
@@ -18,32 +19,13 @@ def user_orders():
 		mail='hamza@gmail.com',
 		password='ovious',
 		organization_id='client3')
-	new_user.save()
+	print(new_user.id)
 	user = User.get_by_id(user_id)
 	orders = user.get_my_priced_orders_jsonified()
 	return jsonify({
 		"message": "orders successfully returned",
 		"results": orders
 	}), 200
-
-@app.route("/order", methods=["POST"])
-def order_by_id():
-	order_id = request.json.get("order_id")
-	order = Order.get_by_id(order_id)
-	return OrderSchema().jsonify(order)
-
-@app.route('/order/add', methods=["POST"])
-def add_order():
-	id = request.json.get("id")
-	user_id = request.json.get("user_id")
-	item_id = request.json.get("item_id")
-	quantity = request.json.get("quantity")
-	order = Order.get_or_create(
-		user_id=user_id, 
-		item_id=item_id, 
-		quantity=quantity)
-	order.save()
-	return OrderSchema().jsonify(order)
 	
 @app.route('/')
 def health_check():
